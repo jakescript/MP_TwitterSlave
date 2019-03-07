@@ -44,8 +44,9 @@ let cody = {
 	include_rts: false
 };
 
-//Web Server
+///// Web Server
 let server = http.createServer(function(req, res){
+	//root url
 	fs.readFile(__dirname + "/index.html", function(err, home){
 		if(err){
 			res.writeHead(404);
@@ -61,27 +62,40 @@ server.listen(3000);
 
 ////////////////////////////////////
 let intTime = 1000*60*30;
-tweetWeather();
+tweetWeather("@luc_klarin");
+postMotivation("@luc_klarin");
+
 getTimelineAction(trish);
 getTimelineAction(shane);
 getTimelineAction(star);
 getTimelineAction(bern);
 getTimelineAction(cody);
 
-setInterval(getTimelineAction, intTime, trish)
-setInterval(getTimelineAction, intTime, shane)
-setInterval(getTimelineAction, intTime, star)
-setInterval(getTimelineAction, intTime, bern)
-setInterval(getTimelineAction, intTime, cody)
+setInterval(getTimelineAction, intTime, trish);
+setInterval(getTimelineAction, intTime, shane);
+setInterval(getTimelineAction, intTime, star);
+setInterval(getTimelineAction, intTime, bern);
+setInterval(getTimelineAction, intTime, cody);
 
 setInterval(tweetWeather, 1000*60*60*6);
 
-function postMotivation(){
-	T.post("statuses/update", {status: ""}, function(err, tweet){
+function postMotivation(user){
+	let tweet = [
+		user, "good luck today on your test.",
+		"As a robot, my creator has great faith in you", 
+		"therefore I must as well. To provide the best results",
+		"we will provide a weather update to keep you fashionable! XoXo"
+	];
+	let status = { status: tweet.join(" ")};
+	T.post("statuses/update", status, function(err, tweet){
+		if(err){
+			console.log(chalk.red(err.message));
+		}else{
+			console.log(chalk.green("Successfully Motivated!"));
 
-	})
-}
-
+		};
+	});
+};
 
 function getTimelineAction(userParam){
 	let favoritedList = []
@@ -130,7 +144,7 @@ function getTimelineAction(userParam){
 	});
 };
 
-function tweetWeather(){
+function tweetWeather(user){
 	console.log(chalk.magenta("PREPARING TO PROVIDE WEATHER"));
 	const baseUrl = "http://api.apixu.com/v1/current.json?key=";
 	const api = apixu.api;
@@ -146,7 +160,7 @@ function tweetWeather(){
 			let weather = JSON.parse(body)
 
 			let tweetArr = [
-				"@luc_klarin", "today in", weather.location.name, "it is", weather.current.temp_f + "°F",
+				user, "today in", weather.location.name, "it is", weather.current.temp_f + "°F",
 				"but it feels like", weather.current.feelslike_f + "°F.",
 				"The sky seems to be", weather.current.condition.text + ".",
 				"I hope this helped you prepare for the day! You got this"
