@@ -1,12 +1,13 @@
 const Twit = require("twit");
-const config = require("./config.js"); //twitter credentials 
-const apixu = require("./apixu.js")
 const http = require("http");
 const chalk = require("chalk");
+const fs = require("fs");
 
+const config = require("./config.js");  
+const apixu = require("./apixu.js");
 /// Auth
 const T = new Twit(config);
-let tweetCount = 10;
+const tweetCount = 10;
 
 let trish = {
 	screen_name: "trishapaytas",
@@ -43,21 +44,43 @@ let cody = {
 	include_rts: false
 };
 
-//Calling actions for Twitter
-// tweetWeather();
-// getTimelineAction(trish);
-// getTimelineAction(shane);
-// getTimelineAction(star);
-// getTimelineAction(bern);
-// getTimelineAction(cody);
+//Web Server
+let server = http.createServer(function(req, res){
+	fs.readFile(__dirname + "/index.html", function(err, home){
+		if(err){
+			res.writeHead(404);
+		}else{
+			res.writeHead(200, {'Content-Type': 'text/html'});
+			res.write(home);
+			res.end();
+		};
+	});
+});
 
-// setInterval(getTimelineAction, 1000*60*60, trish)
-// setInterval(getTimelineAction, 1000*60*60, shane)
-// setInterval(getTimelineAction, 1000*60*60, star)
-// setInterval(getTimelineAction, 1000*60*60, bern)
-// setInterval(getTimelineAction, 1000*60*60, cody)
+server.listen(3000);
 
-// setInterval(tweetWeather, 1000*60*60*24);
+////////////////////////////////////
+let intTime = 1000*60*30;
+tweetWeather();
+getTimelineAction(trish);
+getTimelineAction(shane);
+getTimelineAction(star);
+getTimelineAction(bern);
+getTimelineAction(cody);
+
+setInterval(getTimelineAction, intTime, trish)
+setInterval(getTimelineAction, intTime, shane)
+setInterval(getTimelineAction, intTime, star)
+setInterval(getTimelineAction, intTime, bern)
+setInterval(getTimelineAction, intTime, cody)
+
+setInterval(tweetWeather, 1000*60*60*6);
+
+function postMotivation(){
+	T.post("statuses/update", {status: ""}, function(err, tweet){
+
+	})
+}
 
 
 function getTimelineAction(userParam){
