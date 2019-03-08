@@ -5,79 +5,66 @@ const fs = require("fs");
 
 const config = require("./config.js");  
 const apixu = require("./apixu.js");
+const twitterAcc = require("./twitterAc.js"); 
+
 /// Auth
 const T = new Twit(config);
 const tweetCount = 10;
 
-let trish = {
+
+const intTimeTweet = 1000*60*15;
+const intTimeWeather = 1000*60*60*6;
+
+const trish = {
 	screen_name: "trishapaytas",
 	count: tweetCount,
 	exclude_replies: true,
 	include_rts: false
 };
 
-let shane = {
+const shane = {
 	screen_name: "shanedawson",
 	count: tweetCount,
 	exclude_replies: true,
 	include_rts: false
 };
 
-let star = {
+const star = {
 	screen_name: "JeffreeStar",
 	count: tweetCount,
 	exclude_replies: true,
 	include_rts: false
 };
 
-let bern = {
+const bern = {
 	screen_name: "BernieSanders",
 	count: tweetCount,
 	exclude_replies: true,
 	include_rts: false
 };
 
-let cody = {
+const cody = {
 	screen_name: "codyko",
 	count: tweetCount,
 	exclude_replies: true,
 	include_rts: false
 };
 
-///// Web Server
-let server = http.createServer(function(req, res){
-	//root url
-	fs.readFile(__dirname + "/index.html", function(err, home){
-		if(err){
-			res.writeHead(404);
-		}else{
-			res.writeHead(200, {'Content-Type': 'text/html'});
-			res.write(home);
-			res.end();
-		};
-	});
-});
+///// Web Server ( DISABLED FOR NOW )
+// let server = http.createServer(function(req, res){
+// 	//root url
+// 	fs.readFile(__dirname + "/index.html", function(err, home){
+// 		if(err){
+// 			res.writeHead(404);
+// 		}else{
+// 			res.writeHead(200, {'Content-Type': 'text/html'});
+// 			res.write(home);
+// 			res.end();
+// 		};
+// 	});
+// });
 
-server.listen(3000);
-
-////////////////////////////////////
-let intTime = 1000*60*30;
-tweetWeather("@luc_klarin");
-postMotivation("@luc_klarin");
-
-getTimelineAction(trish);
-getTimelineAction(shane);
-getTimelineAction(star);
-getTimelineAction(bern);
-getTimelineAction(cody);
-
-setInterval(getTimelineAction, intTime, trish);
-setInterval(getTimelineAction, intTime, shane);
-setInterval(getTimelineAction, intTime, star);
-setInterval(getTimelineAction, intTime, bern);
-setInterval(getTimelineAction, intTime, cody);
-
-setInterval(tweetWeather, 1000*60*60*6);
+// server.listen(3000);
 
 function postMotivation(user){
 	let tweet = [
@@ -86,7 +73,9 @@ function postMotivation(user){
 		"therefore I must as well. To provide the best results",
 		"we will provide a weather update to keep you fashionable! XoXo"
 	];
+
 	let status = { status: tweet.join(" ")};
+
 	T.post("statuses/update", status, function(err, tweet){
 		if(err){
 			console.log(chalk.red(err.message));
@@ -115,7 +104,7 @@ function getTimelineAction(userParam){
 				//Checking for youtube Link
 				console.log(slicedUrl)
 				if(slicedUrl.slice(0,3) == "you"){
-					conso.log("RETWEETING")
+					console.log("RETWEETING");
 					T.post("statuses/retweet", {id: id}, function(err, tweet){
 						if(err){
 							console.log(chalk.red(err.message));
@@ -125,7 +114,7 @@ function getTimelineAction(userParam){
 					});
 				};
 			}else{
-				console.log("NO URL!")
+				console.log("NO URL!");
 			};
 
 			
@@ -173,8 +162,8 @@ function tweetWeather(user){
 					console.log(chalk.red(err.message));
 				}else{
 					console.log(chalk.blueBright("Successfully Tweeted Weather Update!"));
-				}
-			})
+				};
+			});
 			
 		});
 
@@ -184,6 +173,27 @@ function tweetWeather(user){
 		});
 	});
 };
+
+
+function initBot(){
+	// Execute Functions
+	console.log(chalk.cyanBright.bold("HELLO AGAIN ITS MARCO"));
+	getTimelineAction(trish);
+	getTimelineAction(shane);
+	getTimelineAction(star);
+	getTimelineAction(bern);
+	getTimelineAction(cody);
+
+	setInterval(getTimelineAction, intTimeTweet, trish);
+	setInterval(getTimelineAction, intTimeTweet, shane);
+	setInterval(getTimelineAction, intTimeTweet, star);
+	setInterval(getTimelineAction, intTimeTweet, bern);
+	setInterval(getTimelineAction, intTimeTweet, cody);
+
+	setInterval(tweetWeather, intTimeWeather, twitterAcc.twitter);
+};
+
+initBot();
 
 
 
