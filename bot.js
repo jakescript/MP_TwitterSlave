@@ -175,25 +175,20 @@ function tweetWeather(user){
 };
 
 
-function initBot(){
-	// Execute Functions
-	console.log(chalk.cyanBright.bold("HELLO AGAIN ITS MARCO"));
-	getTimelineAction(trish);
-	getTimelineAction(shane);
-	getTimelineAction(star);
-	getTimelineAction(bern);
-	getTimelineAction(cody);
+getTimelineAction(trish);
+getTimelineAction(shane);
+getTimelineAction(star);
+getTimelineAction(bern);
+getTimelineAction(cody);
 
-	setInterval(getTimelineAction, intTimeTweet, trish);
-	setInterval(getTimelineAction, intTimeTweet, shane);
-	setInterval(getTimelineAction, intTimeTweet, star);
-	setInterval(getTimelineAction, intTimeTweet, bern);
-	setInterval(getTimelineAction, intTimeTweet, cody);
+setInterval(getTimelineAction, intTimeTweet, trish);
+setInterval(getTimelineAction, intTimeTweet, shane);
+setInterval(getTimelineAction, intTimeTweet, star);
+setInterval(getTimelineAction, intTimeTweet, bern);
+setInterval(getTimelineAction, intTimeTweet, cody);
 
-	setInterval(tweetWeather, intTimeWeather, twitterAcc.twitter);
-};
+setInterval(tweetWeather, intTimeWeather, twitterAcc.twitter);
 
-initBot();
 
 
 
